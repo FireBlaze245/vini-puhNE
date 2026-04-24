@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "header.h"
@@ -17,7 +17,7 @@ void my_sort(struct result results[], int count) {
 
 void my_fprint(struct result results[], int count){
 	FILE *out = fopen("out.txt", "w");	
-	fprintf(out, "Название груза\t\tКоличество стеллажей\n");
+	fprintf(out, "Название груза\t\tКоличестddво стеллажей\n");
 	for (int i = 0; i < count; i++) {
 		fprintf(out, "%s\t\t%d\n", results[i].name, results[i].polka_count);}
 	fclose(out);
