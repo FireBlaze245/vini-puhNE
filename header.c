@@ -179,5 +179,50 @@ void process(struct tovar ar[], int count) {
 	}
 
 	//Пункт 3. удаление строчки по ключууу
-	//
+	//По сути пишется так же как замена, ток моя идея в том, чтобы при
+	//перезаписи файла пропускать указанную строчку
+	void deletik() {
+		FILE* in = fopen("in.txt", "r");
+		FILE* out = fopen("out.txt", "w");
+		//дальше обработочка ошибочки
+		if (!in || !out) {
+			printf("Ошибка открытия файла\n");
+			if (in) fclose(in);
+			if (out) fclose(out);
+			return;
+		}
+		char line[256];
+		char key[100];
+		printf("Введите название груза для удаления: \n");
+		scanf("%99s", key);
+
+		int now_line = 0;
+		while (fgets(line, sizeof(line), in)) {
+			if (now_line < 2) {
+				fputs(line, out);
+			}
+			else {
+				char_name[100];
+				int count;
+				if (sscanf(line, "%99s %d", name, &count) == 2) {
+					if (strcmp(name, key) != 0) {
+						fputs(line, out); //разбираем и копируем строчку
+					}
+					else { //иначе пропускаем
+						fputs(line, out);
+					}
+				}
+				now_line++;
+			}
+			fclose(in);
+			fclose(out);
+		}
+
+		//можно ещё сделать по другому чутка, чтоб оно ток одну строчку такю удаляло
+		/*int deletik_only_one = 0;
+		if (strcmp(name, key) == 0 && !deletik_only_one) {
+			deletik_only_one = 1;
+			continue;
+		}*/
+
 
