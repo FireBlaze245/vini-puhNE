@@ -1,6 +1,6 @@
 Название груза		Количество стеллажей
-Клавиатура_Logitech		2
-Монитор_Samsung		3
-Мышь_Logitech		2
-Принтер_HP		2
-Сканер_Canon		3
+Keyboard_Logitech		2
+Monitor_Samsung		3
+Mouse_Logitech		2
+Printer_HP		2
+Scanner_Canon		3

@@ -3,6 +3,47 @@
 #include <string.h>
 #include "header.h"
 
+int menu() {
+	int number;
+	printf("Menu:\n0. Exit\n1. Load data from input file into array of structures\n2. Add a row to the array\n3. Delete a row by key\n4. Replace a row\n5. Insertion sort\n6. Selection sort\n7. Bubble sort (exchange sort)\n8. Save data to file\n9. Print file or array with pagination and page number header\n");
+	scanf("%d", &number);
+	switch (number) {
+	case 0:
+		//0. Выход
+		return 0;
+	case 1:
+		//1. Загрузить данные из входного файла в массив структур
+		return 1;
+	case 2:
+		//2. Добавить строчку в массив
+		return 2;
+	case 3:
+		//3. Удалить строчку по ключу
+		return 3;
+	case 4:
+		//4. Заменить строчку
+		return 4;
+	case 5:
+		//5. Сортировка вставкой
+		return 5;
+	case 6:
+		//6. Сортировка выбором
+		return 6;
+	case 7:
+		//7. Сортировка обменом (пузырек)
+		return 7;
+	case 8:
+		//8. Сохранить данные в файл
+		return 8;
+	case 9:
+		//9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы
+		return 9;
+	default:
+		printf("Input number in range 0 - 9\n");
+		menu();
+	}
+}
+// сортировка пузырьком даня
 void my_sort(struct result results[], int count) {
 	for (int i = 0; i < count - 1; i++) {
 		for (int j = i + 1; j < count; j++) {
@@ -59,6 +100,7 @@ void process(struct tovar ar[], int count) {
 
 	my_sort(results, result_count);
 	my_fprint(results, result_count);
+}
 
 	//от мариооо (пункт 9)
 	//меням функцию чтоб выводила по страничкам
@@ -74,7 +116,7 @@ void process(struct tovar ar[], int count) {
 
 		//даня вот обработчик ошибки, но мб я в глаза долблюсь у тебя не увидела потому что упоролась
 		if (!out) {
-			printf("Ошибка открытия файла\n");
+			printf("Couldn't open the file\n");
 			return;
 		}
 		int page_size = 3;  //строки на странице
@@ -138,7 +180,7 @@ void process(struct tovar ar[], int count) {
 		FILE* out = fopen("out.txt", "w");
 		//дальше обработочка ошибочки
 		if (!in || !out) {
-			printf("Ошибка открытия файла\n");
+			printf("Couldn't open the file\n");
 			if (in) fclose(in);
 			if (out) fclose(out);
 			return;
@@ -149,11 +191,11 @@ void process(struct tovar ar[], int count) {
 		int chosen_line;
 		int now_line = 0;
 
-		printf("Введите номер строки, которую хотите заменить: ");
+		printf("Enter the number of the line you want to replace: ");
 		scanf("%d", &chosen_line);
-		printf("Введите новое название груза: ");
+		printf("Enter a new cargo name: ");
 		scanf("%99s", new_namik);
-		printf("Введите новое количество стеллажей: ");
+		printf("Enter a new number of shelves: ");
 		scanf("%d", &new_count);
 
 

@@ -54,7 +54,8 @@ int menu();
 
 int main(void) {
 	setlocale(LC_ALL, "Russian");
-	menu();
+	
+	while (menu() != 0) {};
 	struct tovar arr[100];
 	struct tovar ftovar;
 	int count = 0;
