@@ -7,42 +7,30 @@ int menu() {
 	int number;
 	printf("Menu:\n0. Exit\n1. Load data from input file into array of structures\n2. Add a row to the array\n3. Delete a row by key\n4. Replace a row\n5. Insertion sort\n6. Selection sort\n7. Bubble sort (exchange sort)\n8. Save data to file\n9. Print file or array with pagination and page number header\n");
 	scanf("%d", &number);
-	switch (number) {
-	case 0:
-		//0. Выход
-		return 0;
-	case 1:
-		//1. Загрузить данные из входного файла в массив структур
-		return 1;
-	case 2:
-		//2. Добавить строчку в массив
-		return 2;
-	case 3:
-		//3. Удалить строчку по ключу
-		return 3;
-	case 4:
-		//4. Заменить строчку
-		return 4;
-	case 5:
-		//5. Сортировка вставкой
-		return 5;
-	case 6:
-		//6. Сортировка выбором
-		return 6;
-	case 7:
-		//7. Сортировка обменом (пузырек)
-		return 7;
-	case 8:
-		//8. Сохранить данные в файл
-		return 8;
-	case 9:
-		//9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы
-		return 9;
-	default:
-		printf("Input number in range 0 - 9\n");
-		menu();
-	}
+	return number;
+	
 }
+
+//  загрузка данных из входного файла даня
+int fsafe(struct result result[]) {
+	struct tovar arr[100];
+	struct tovar ftovar;
+	int count = 0;
+	FILE* fh = fopen("in.txt", "r");
+	if (fh == NULL) { printf("Couldn't open the file\n"); return 1; }
+	while (count < 100) {
+		int result = fscanf(fh, "%d %*d.%*d.%*d %49s", &ftovar.polka, ftovar.name);
+		if (result == EOF) {
+			break;
+		}
+		arr[count] = ftovar;
+		count++;
+	}
+	fclose(fh);
+	process(arr, count, result);
+	return count;
+}
+
 // сортировка пузырьком даня
 void my_sort(struct result results[], int count) {
 	for (int i = 0; i < count - 1; i++) {
@@ -60,16 +48,18 @@ void my_sort(struct result results[], int count) {
 void my_fprint(struct result results[], int count)
 {
 	FILE* out = fopen("out.txt", "w");
+	if (!out) {
+		printf("Couldn't open the file\n");
+		return;
+	}
 	fprintf(out, "Название груза\t\tКоличество стеллажей\n");
 	for (int i = 0; i < count; i++) {
 		fprintf(out, "%s\t\t%d\n", results[i].name, results[i].polka_count);
 	}
 	fclose(out);
 }
-//погоди даня а где обработка ошибки открытия файла??
 
-void process(struct tovar ar[], int count) {
-	struct result results[100];
+void process(struct tovar ar[], int count, struct result results[]) {
 	int result_count = 0;
 	for (int i = 0; i < count; i++) {
 		int found = -1;
@@ -97,9 +87,9 @@ void process(struct tovar ar[], int count) {
 			}
 		}
 	}
-
-	my_sort(results, result_count);
-	my_fprint(results, result_count);
+	
+	/*my_sort(results, result_count);
+	my_fprint(results, result_count);*/
 }
 
 	//от мариооо (пункт 9)
@@ -117,7 +107,7 @@ void process(struct tovar ar[], int count) {
 		//даня вот обработчик ошибки, но мб я в глаза долблюсь у тебя не увидела потому что упоролась
 		if (!out) {
 			printf("Couldn't open the file\n");
-			return;
+			return ;
 		}
 		int page_size = 3;  //строки на странице
 		int line = 0;

@@ -28,16 +28,16 @@
 //Принтер_HP 1
 /* По своему проекту Винни уровня 3 или 4:
 Меню:
-0. Выход
+0. Выход +
 1. Загрузить данные из входного файла в массив структур
 2. Добавить строчку в массив
 3. Удалить строчку по ключу
 4. Заменить строчку
-5. Сортировка вставкой
-6. Сортировка выбором
-7. Сортировка обменом (пузырек)
+5. Сортировка вставкой +
+6. Сортировка выбором  +
+7. Сортировка обменом (пузырек) +
 8. Сохранить данные в файл
-9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы
+9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы 
 
 
 
@@ -53,24 +53,56 @@ int menu();
 
 
 int main(void) {
-	setlocale(LC_ALL, "Russian");
-	
-	while (menu() != 0) {};
-	struct tovar arr[100];
-	struct tovar ftovar;
-	int count = 0;
-	FILE *fh = fopen("in.txt", "r");
-	if (fh == NULL) {printf("Couldn't open the file\n");return 1;}
-	while (count < 100) {
-		int result = fscanf(fh, "%d %*d.%*d.%*d %49s", &ftovar.polka, ftovar.name);
-		if (result == EOF) {
+	int number, counter=0, loaded=0;
+	struct result arr[100];
+	setlocale(LC_ALL, "");
+	number = menu();
+	while (number != 0) {
+		switch (number) {
+		case 1:
+			//1. Загрузить данные из входного файла в массив структур
+			counter = fsafe(arr);
+			loaded = 1;
 			break;
-		} 
-		arr[count] = ftovar;
-		count++;
+		case 2:
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+			//else{}
+			//2. Добавить строчку в массив
+		case 3:
+			//3. Удалить строчку по ключу
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+		case 4:
+			//4. Заменить строчку
+			//Я не понял как работает эта функция
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+		case 5:
+			//5. Сортировка вставкой
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+			else { sort_input(arr, counter); break;
+			}
+		case 6:
+			//6. Сортировка выбором
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+			else { sort_choice(arr, counter); break;
+			}
+		case 7:
+			//7. Сортировка обменом (пузырек)
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+			else { my_sort(arr, counter); break;
+			}
+		case 8:
+			//8. Сохранить данные в файл
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+			else{my_fprint(arr, counter); break;
+		}
+		case 9:
+			//9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+		default:
+			printf("Input number in range 0 - 9\n");
+		};
+		number = menu();
 	}
-	fclose(fh);
-	process(arr, count);
 	return 0;
 }
 
