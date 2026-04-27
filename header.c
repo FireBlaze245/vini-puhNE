@@ -3,15 +3,18 @@
 #include <string.h>
 #include "header.h"
 
+//  от Носорев Даниил
+//  вывод меню в терменал
 int menu() {
 	int number;
-	printf("Menu:\n0. Exit\n1. Load data from input file into array of structures\n2. Add a row to the array\n3. Delete a row by key\n4. Replace a row\n5. Insertion sort\n6. Selection sort\n7. Bubble sort (exchange sort)\n8. Save data to file\n9. Print file or array with pagination and page number header\n");
+	printf("Menu:\n1. Load data from input file into array of structures\n2. Add a row to the array\n3. Delete a row by key\n4. Replace a row\n5. Insertion sort\n6. Selection sort\n7. Bubble sort (exchange sort)\n8. Save data to file\n9. Print file or array with pagination and page number header\n0. Exit\n");
 	scanf("%d", &number);
 	return number;
 	
 }
 
-//  загрузка данных из входного файла даня
+//  от Носорев Даниил
+//  загрузка данных из входного файла 
 int fsafe(struct result result[]) {
 	struct tovar arr[100];
 	struct tovar ftovar;
@@ -27,12 +30,12 @@ int fsafe(struct result result[]) {
 		count++;
 	}
 	fclose(fh);
-	process(arr, count, result);
+	count = process(arr, count, result);
 	return count;
 }
 
-// сортировка пузырьком даня
-void my_sort(struct result results[], int count) {
+//  сортировка пузырьком от Евстифеева Марина
+void bubble_sort(struct result results[], int count) {
 	for (int i = 0; i < count - 1; i++) {
 		for (int j = i + 1; j < count; j++) {
 			if (strcmp(results[i].name, results[j].name) > 0) {
@@ -44,7 +47,8 @@ void my_sort(struct result results[], int count) {
 	}
 }
 
-
+//  от Носорев Даниил
+//  Вывод данных в файл
 void my_fprint(struct result results[], int count)
 {
 	FILE* out = fopen("out.txt", "w");
@@ -57,9 +61,11 @@ void my_fprint(struct result results[], int count)
 		fprintf(out, "%s\t\t%d\n", results[i].name, results[i].polka_count);
 	}
 	fclose(out);
-}
+} 
 
-void process(struct tovar ar[], int count, struct result results[]) {
+//  от Носорев Даниил
+//  преобразвование данных
+int process(struct tovar ar[], int count, struct result results[]) {
 	int result_count = 0;
 	for (int i = 0; i < count; i++) {
 		int found = -1;
@@ -87,35 +93,30 @@ void process(struct tovar ar[], int count, struct result results[]) {
 			}
 		}
 	}
-	
+	return result_count;
 	/*my_sort(results, result_count);
 	my_fprint(results, result_count);*/
 }
 
-	//от мариооо (пункт 9)
-	//меням функцию чтоб выводила по страничкам
-	//я предполагаю что должно выглядеть так:
-	//Страница 1
-	//Название груза    Количество стеллажиков
-	//=========================================
-	//Фрукты всякие, продукты      количество стеллажей
-
-	//а ля я туплю надо переделать, че я вообще написала
-	void print_file_pagik_trushniy(struct result results[], int count) {
+//  от Евстифеева Марина (пункт 9)
+//  меняем функцию чтоб выводила по страничкам
+//  макет вывода данных:
+//  Страница 1
+//  Название груза    Количество стеллажиков
+//  =========================================
+//  Фрукты всякие, продукты      количество стеллажей
+void print_file_pagik_trushniy(struct result results[], int count) {
 		FILE* out = fopen("out.txt", "w");
-
-		//даня вот обработчик ошибки, но мб я в глаза долблюсь у тебя не увидела потому что упоролась
 		if (!out) {
 			printf("Couldn't open the file\n");
 			return ;
 		}
-		int page_size = 3;  //строки на странице
+		int page_size = 3;  
 		int line = 0;
 		int page = 1;
 
 		for (int i = 0; i < count; i++) {
 
-			// новая страница
 			if (line % page_size == 0) {
 				fprintf(out, "\nСтраница %d\n", page++);
 				fprintf(out, "Название груза\t\tКоличество стеллажей\n");
@@ -124,15 +125,15 @@ void process(struct tovar ar[], int count, struct result results[]) {
 
 			fprintf(out, "%-20s %5d\n",
 				results[i].name,
-				results[i].polka_count); //-20 эт выравнивание текста шоб по красоте
+				results[i].polka_count); 
 			line++;
 		}
 
 		fclose(out);
 	}
 
-	//сортировка выбором от мариоооо (6 пункт)
-	void sort_choice(struct result results[], int count) {
+//  сортировка выбором оот Евстифеева Марина (6 пункт)
+void sort_choice(struct result results[], int count) {
 		for (int i = 0; i < count - 1; i++) {
 			int min_ind = i;
 			for (int j = i + 1; j < count; j++) {
@@ -147,8 +148,9 @@ void process(struct tovar ar[], int count, struct result results[]) {
 			}
 		}
 	}
-	//сортировка вставкой от мариоооо (5 пункт)
-	void sort_input(struct result results[], int count) {
+
+//  сортировка вставкой от Евстифеева Марина (5 пункт)
+void sort_input(struct result results[], int count) {
 		for (int i = 1; i < count; i++) {
 			struct result key = results[i];
 			int j = i - 1;
@@ -161,14 +163,12 @@ void process(struct tovar ar[], int count, struct result results[]) {
 		}
 	}
 
-	//пункт 4. Замена строчки
-	//если речь о перезаписи в строчке то тут проблемка, ибо в C нельзя перезаписать строчку если длинна отличается
-	//я попробую накидать, но по сути чтоб перезаписать надо тупо файл пересоздавать
-
-	void replacee() {
+//  пункт 4. Замена строчки от Евстифеева Марина
+//  если речь о перезаписи в строчке то тут проблемка, ибо в C нельзя перезаписать строчку если длинна отличается
+//  я попробую накидать, но по сути чтоб перезаписать надо тупо файл пересоздавать
+void replacee() {
 		FILE* in = fopen("in.txt", "r");
 		FILE* out = fopen("out.txt", "w");
-		//дальше обработочка ошибочки
 		if (!in || !out) {
 			printf("Couldn't open the file\n");
 			if (in) fclose(in);
@@ -210,5 +210,8 @@ void process(struct tovar ar[], int count, struct result results[]) {
 		rename("out.txt", "in.txt");
 	}
 
-	//Пункт 3. удаление строчки по ключууу
-	//
+//  от Евстифеева Марина (пункт 2)
+// Удалить строчку по ключу
+
+//  от Евстифеева Марина (пункт 2 )
+//Добавить строчку в массив

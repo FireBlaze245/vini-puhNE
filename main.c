@@ -1,10 +1,8 @@
 ﻿/*Носорев Даниил Евстифеева Марина
-носорев делает main.c с выстраением логики и помочь сделать функции
+Носорев делает main.c с построением логики и реализации функций сохранить в массив из файла
 евстифеева делает реализацию функций в header.c
 набросан шаблоны и макет будующих функций
 реализация всего на 50% заняло 1.5 часа. Будем ДОДЕЛЫВАЬТЬ */
-
-
 //В базе данных склада содержатся сведения о грузах и размещении на стеллажах.
 //Структура входного файла in.txt (Номер стеллажа Дата укладки Название груза)
 //1 25.10.2022 Printer_HP
@@ -38,9 +36,6 @@
 7. Сортировка обменом (пузырек) +
 8. Сохранить данные в файл
 9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы 
-
-
-
 */
 
 #include <stdio.h>
@@ -49,7 +44,7 @@
 #include <locale.h>
 #include "header.h"
 
-int menu();
+
 
 
 int main(void) {
@@ -65,41 +60,44 @@ int main(void) {
 			loaded = 1;
 			break;
 		case 2:
-			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
-			//else{}
-			//2. Добавить строчку в массив
+			//2. Добавить строчку в массив не сделано
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); break; }
+			else { break; }
+
 		case 3:
-			//3. Удалить строчку по ключу
-			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+			//3. Удалить строчку по ключу не сделано
+			if (loaded != 1) {printf("First, upload the data (point 1)\n"); break;}
+			else { break; }
 		case 4:
-			//4. Заменить строчку
-			//Я не понял как работает эта функция
-			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+			//4. Заменить строчку не сделано
+			if (loaded != 1) {printf("First, upload the data (point 1)\n"); break;}
+			else { break; }
 		case 5:
 			//5. Сортировка вставкой
-			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
-			else { sort_input(arr, counter); break;
-			}
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); break;}
+			else { sort_input(arr, counter); break;}
 		case 6:
 			//6. Сортировка выбором
-			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
-			else { sort_choice(arr, counter); break;
-			}
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); break;}
+			else { sort_choice(arr, counter); break;}
 		case 7:
 			//7. Сортировка обменом (пузырек)
-			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
-			else { my_sort(arr, counter); break;
-			}
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); break;}
+			else { bubble_sort(arr, counter); break;}
 		case 8:
 			//8. Сохранить данные в файл
-			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
-			else{my_fprint(arr, counter); break;
-		}
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); break;}
+			else{my_fprint(arr, counter); break;}
 		case 9:
-			//9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы
-			if (loaded != 1) { printf("First, upload the data (point 1)\n"); }
+			//9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы, сделано как вывод в файл
+			if (loaded != 1) { printf("First, upload the data (point 1)\n"); break;}
+			else{print_file_pagik_trushniy(arr, counter);break;}
+		case 0:
+			//Выход
+			break;
 		default:
 			printf("Input number in range 0 - 9\n");
+			break;
 		};
 		number = menu();
 	}
