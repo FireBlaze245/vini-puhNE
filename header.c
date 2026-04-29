@@ -138,7 +138,7 @@ void process(struct tovar ar[], int count) {
 			return;
 		}
 		char line[256];
-		char new_namik[100];
+		char new_namik[100]; 
 		int new_count;
 		int chosen_line;
 		int now_line = 0;
@@ -151,16 +151,16 @@ void process(struct tovar ar[], int count) {
 		scanf("%d", &new_count);
 
 
-		while (fgets(line, sizeof(line), in)) {
-			if (now_line < 2) {
+		while (fgets(line, sizeof(line), in)) { //чтение файла построчно
+			if (now_line < 2) { //первые две строки это загооловочки, их коп без изм
 				fputs(line, out);
 			}
 			else {
-				int data_ind = now_line - 2;
-				if (data_ind == chosen_line - 1) {
+				int data_ind = now_line - 2; //делаем строчку с данными так, чтобы отсчитывался от 0, а не от 2
+				if (data_ind == chosen_line - 1) { //замена строчки, -1 потому что польз вводит с 1, а массив должен быть с 0
 					fprintf(out, "%-20s %5d\n", new_namik, new_count);
 				}
-				else {
+				else { //другие строчечки копируются просто
 					fputs(line, out);
 				}
 			}
@@ -168,8 +168,8 @@ void process(struct tovar ar[], int count) {
 		}
 		fclose(in);
 		fclose(out);
-		remove("in.txt");
-		rename("out.txt", "in.txt");
+		remove("in.txt"); //удаляем старый интик
+		rename("out.txt", "in.txt"); //перезаписываем изменённый в интик
 	}
 
 	//Пункт 3. удаление строчки по ключууу
