@@ -69,34 +69,28 @@ void process(struct tovar ar[], int count) {
 	//Фрукты всякие, продукты      количество стеллажей
 
 	//а ля я туплю надо переделать, че я вообще написала
-	void print_file_pagik_trushniy(struct result results[], int count) {
-		FILE* out = fopen("out.txt", "w");
-
-		//даня вот обработчик ошибки, но мб я в глаза долблюсь у тебя не увидела потому что упоролась
-		if (!out) {
-			printf("Ошибка открытия файла\n");
-			return;
-		}
+	void print_terminal_pagik_trushniy(struct result results[], int count) {
 		int page_size = 3;  //строки на странице
 		int line = 0;
 		int page = 1;
 
 		for (int i = 0; i < count; i++) {
-
+			if (line % page_size == 0 && line != 0) {
+				printf("-------------------------------------------\n");
+			}
 			// новая страница
 			if (line % page_size == 0) {
-				fprintf(out, "\nСтраница %d\n", page++);
-				fprintf(out, "Название груза\t\tКоличество стеллажей\n");
-				fprintf(out, "========================================\n");
+				printf("\nСтраница %d\n", page++);
+				printf("Название груза\t\tКоличество стеллажей\n");
+				printf("========================================\n");
 			}
 
-			fprintf(out, "%-20s %5d\n",
+			printf("%-20s %5d\n",
 				results[i].name,
 				results[i].polka_count); //-20 эт выравнивание текста шоб по красоте
 			line++;
+			
 		}
-
-		fclose(out);
 	}
 
 	//сортировка выбором от мариоооо (6 пункт)
@@ -184,39 +178,55 @@ void process(struct tovar ar[], int count) {
 	void deletik() {
 		FILE* in = fopen("in.txt", "r");
 		FILE* out = fopen("out.txt", "w");
-		//дальше обработочка ошибочки
+
 		if (!in || !out) {
 			printf("Ошибка открытия файла\n");
 			if (in) fclose(in);
 			if (out) fclose(out);
 			return;
 		}
+
 		char line[256];
+		char name[100];
+		int count;
 		char key[100];
-		printf("Введите название груза для удаления: \n");
+
+		printf("Введите название груза для удаления: ");
 		scanf("%99s", key);
 
 		int now_line = 0;
+
 		while (fgets(line, sizeof(line), in)) {
 			if (now_line < 2) {
+				// копируем заголовок
 				fputs(line, out);
 			}
 			else {
-				char_name[100];
-				int count;
+				// читаем строку с данными
 				if (sscanf(line, "%99s %d", name, &count) == 2) {
+					// если не совпадает — записываем
 					if (strcmp(name, key) != 0) {
-						fputs(line, out); //разбираем и копируем строчку
-					}
-					else { //иначе пропускаем
 						fputs(line, out);
 					}
+					// если совпадает удаляем
 				}
-				now_line++;
+				else {
+					// если строка упоротая
+					fputs(line, out);
+				}
 			}
-			fclose(in);
-			fclose(out);
+			now_line++;
 		}
+
+		fclose(in);
+		fclose(out);
+
+		// заменяем файл
+		remove("in.txt");
+		rename("out.txt", "in.txt");
+
+		printf("Удалено.\n");
+	}
 
 		//можно ещё сделать по другому чутка, чтоб оно ток одну строчку такю удаляло
 		/*int deletik_only_one = 0;
