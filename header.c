@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include "header.h"
 
 //  от Носорев Даниил
@@ -10,7 +11,6 @@ int menu() {
 	printf("Menu:\n1. Load data from input file into array of structures\n2. Add a row to the array\n3. Delete a row by key\n4. Replace a row\n5. Insertion sort\n6. Selection sort\n7. Bubble sort (exchange sort)\n8. Save data to file\n9. Print file or array with pagination and page number header\n0. Exit\n");
 	scanf("%d", &number);
 	return number;
-	
 }
 
 //  от Носорев Даниил
@@ -20,12 +20,10 @@ int fsafe(struct result result[]) {
 	struct tovar ftovar;
 	int count = 0;
 	FILE* fh = fopen("in.txt", "r");
-	if (fh == NULL) { printf("Couldn't open the file\n"); return 1; }
+	if (fh == NULL) { printf("Couldn't open the file\n"); return 0; }
 	while (count < 100) {
 		int result = fscanf(fh, "%d %*d.%*d.%*d %49s", &ftovar.polka, ftovar.name);
-		if (result == EOF) {
-			break;
-		}
+		if (result == EOF) break;
 		arr[count] = ftovar;
 		count++;
 	}
@@ -34,7 +32,7 @@ int fsafe(struct result result[]) {
 	return count;
 }
 
-//  сортировка пузырьком от Евстифеева Марина
+//  сортировка пузырьком от Носорев Даниил
 void bubble_sort(struct result results[], int count) {
 	for (int i = 0; i < count - 1; i++) {
 		for (int j = i + 1; j < count; j++) {
@@ -49,19 +47,19 @@ void bubble_sort(struct result results[], int count) {
 
 //  от Носорев Даниил
 //  Вывод данных в файл
-void my_fprint(struct result results[], int count)
-{
+void my_fprint(struct result results[], int count) {
 	FILE* out = fopen("out.txt", "w");
 	if (!out) {
 		printf("Couldn't open the file\n");
 		return;
 	}
-	fprintf(out, "Название груза\t\tКоличество стеллажей\n");
+	fprintf(out, "Cargo name\t\tNumber of shelves\n");
 	for (int i = 0; i < count; i++) {
 		fprintf(out, "%s\t\t%d\n", results[i].name, results[i].polka_count);
 	}
 	fclose(out);
-} 
+	printf("Data saved to out.txt\n");
+}
 
 //  от Носорев Даниил
 //  преобразвование данных
@@ -94,124 +92,169 @@ int process(struct tovar ar[], int count, struct result results[]) {
 		}
 	}
 	return result_count;
-	/*my_sort(results, result_count);
-	my_fprint(results, result_count);*/
 }
 
 //  от Евстифеева Марина (пункт 9)
-//  меняем функцию чтоб выводила по страничкам
-//  макет вывода данных:
-//  Страница 1
-//  Название груза    Количество стеллажиков
-//  =========================================
-//  Фрукты всякие, продукты      количество стеллажей
-void print_file_pagik_trushniy(struct result results[], int count) {
-		FILE* out = fopen("out.txt", "w");
-		if (!out) {
-			printf("Couldn't open the file\n");
-			return ;
+//я предполагаю что должно выглядеть так:
+//Страница 1
+//Название груза    Количество стеллажей
+//=========================================
+//Продукты           количество стеллажей
+//----------------------------------------
+//Страница 2 и тд
+
+void print_terminal_pagik_trushniy(struct result results[], int count) {
+	int page_size = 3;  //строки на странице
+	int line = 0;
+	int page = 1;
+
+	for (int i = 0; i < count; i++) {
+		if (line % page_size == 0 && line != 0) {
+			printf("-------------------------------------------\n");
 		}
-		int page_size = 3;  
-		int line = 0;
-		int page = 1;
-
-		for (int i = 0; i < count; i++) {
-
-			if (line % page_size == 0) {
-				fprintf(out, "\nСтраница %d\n", page++);
-				fprintf(out, "Название груза\t\tКоличество стеллажей\n");
-				fprintf(out, "========================================\n");
-			}
-
-			fprintf(out, "%-20s %5d\n",
-				results[i].name,
-				results[i].polka_count); 
-			line++;
+		// новая страница
+		if (line % page_size == 0) {
+			printf("\nPage %d\n", page++);
+			printf("Cargo name\t\t Number of racks\n");
+			printf("========================================\n");
 		}
 
-		fclose(out);
+		printf("%-20s %5d\n",//выравнивание текста
+			results[i].name,
+			results[i].polka_count); //вывод
+		line++;
+
 	}
+}
 
 //  сортировка выбором оот Евстифеева Марина (6 пункт)
 void sort_choice(struct result results[], int count) {
-		for (int i = 0; i < count - 1; i++) {
-			int min_ind = i;
-			for (int j = i + 1; j < count; j++) {
-				if (strcmp(results[j].name, results[min_ind].name) < 0) {
-					min_ind = j;
-				}
-			}
-			if (min_ind != i) {
-				struct result temp = results[i];
-				results[i] = results[min_ind];
-				results[min_ind] = temp;
+	for (int i = 0; i < count - 1; i++) {
+		int min_ind = i;
+		for (int j = i + 1; j < count; j++) {
+			if (strcmp(results[j].name, results[min_ind].name) < 0) {
+				min_ind = j;
 			}
 		}
+		if (min_ind != i) {
+			struct result temp = results[i];
+			results[i] = results[min_ind];
+			results[min_ind] = temp;
+		}
 	}
+}
 
 //  сортировка вставкой от Евстифеева Марина (5 пункт)
 void sort_input(struct result results[], int count) {
-		for (int i = 1; i < count; i++) {
-			struct result key = results[i];
-			int j = i - 1;
-
-			while (j >= 0 && strcmp(results[j].name, key.name) > 0) {
-				results[j + 1] = results[j];
-				j--;
-			}
-			results[j + 1] = key;
+	for (int i = 1; i < count; i++) {
+		struct result key = results[i];
+		int j = i - 1;
+		while (j >= 0 && strcmp(results[j].name, key.name) > 0) {
+			results[j + 1] = results[j];
+			j--;
 		}
+		results[j + 1] = key;
 	}
+}
 
-//  пункт 4. Замена строчки от Евстифеева Марина
-//  если речь о перезаписи в строчке то тут проблемка, ибо в C нельзя перезаписать строчку если длинна отличается
-//  я попробую накидать, но по сути чтоб перезаписать надо тупо файл пересоздавать
+//пункт 4. Замена строчки
+//если речь о перезаписи в строчке то тут проблема, ибо в C нельзя перезаписать строчку если длинна отличается
+//по сути чтоб перезаписать надо тупо файл пересоздавать
 void replacee() {
-		FILE* in = fopen("in.txt", "r");
-		FILE* out = fopen("out.txt", "w");
-		if (!in || !out) {
-			printf("Couldn't open the file\n");
-			if (in) fclose(in);
-			if (out) fclose(out);
-			return;
-		}
-		char line[256];
-		char new_namik[100];
-		int new_count;
-		int chosen_line;
-		int now_line = 0;
-
-		printf("Enter the number of the line you want to replace: ");
-		scanf("%d", &chosen_line);
-		printf("Enter a new cargo name: ");
-		scanf("%99s", new_namik);
-		printf("Enter a new number of shelves: ");
-		scanf("%d", &new_count);
-
-
-		while (fgets(line, sizeof(line), in)) {
-			if (now_line < 2) {
-				fputs(line, out);
-			}
-			else {
-				int data_ind = now_line - 2;
-				if (data_ind == chosen_line - 1) {
-					fprintf(out, "%-20s %5d\n", new_namik, new_count);
-				}
-				else {
-					fputs(line, out);
-				}
-			}
-			now_line++;
-		}
-		fclose(in);
-		fclose(out);
-		remove("in.txt");
-		rename("out.txt", "in.txt");
+	int line_num;
+	printf("Enter line number to replace (1 - first data line): ");
+	scanf("%d", &line_num);
+	if (line_num < 1) {
+		printf("Invalid line number.\n");
+		return;
 	}
 
-//  от Евстифеева Марина (пункт 2)
-// Удалить строчку по ключу
+	FILE* in = fopen("in.txt", "r");
+	FILE* out = fopen("temp.txt", "w");
+	if (!in || !out) {
+		printf("File opening error\n");
+		if (in) fclose(in);
+		if (out) fclose(out);
+		return;
+	}
 
-//  от Евстифеева Марина (пункт 2 )
+	int polka, day, month, year, cur = 0;
+	char name[50];
+	int replaced = 0;
+
+	while (fscanf(in, "%d %d.%d.%d %49s", &polka, &day, &month, &year, name) == 5) {
+		cur++;
+		if (cur == line_num) {
+			printf("Enter new shelf number, date (day month year), and cargo name:\n");
+			scanf("%d %d %d %d %49s", &polka, &day, &month, &year, name);
+			replaced = 1;
+		}
+		fprintf(out, "%d %d.%d.%d %s\n", polka, day, month, year, name);
+	}
+	fclose(in);
+	fclose(out);
+	if (replaced) {
+		remove("in.txt");
+		rename("temp.txt", "in.txt");
+		printf("Line %d replaced.\n", line_num);
+	}
+	else {
+		remove("temp.txt");
+		printf("Line %d not found.\n", line_num);
+	}
+}
+
+//от Евстифеева Марина Пункт 3. удаление строчки по ключу
+//По сути пишется так же как замена, только при перезаписи файла пропускать указанную строчку
+void deletik() {
+	char key[50];
+	printf("Enter cargo name to delete: ");
+	scanf("%49s", key);
+
+	FILE* in = fopen("in.txt", "r");
+	FILE* out = fopen("temp.txt", "w");
+	if (!in || !out) {
+		printf("File opening error\n");
+		if (in) fclose(in);
+		if (out) fclose(out);
+		return;
+	}
+
+	int polka, day, month, year, deleted = 0;
+	char name[50];
+	while (fscanf(in, "%d %d.%d.%d %49s", &polka, &day, &month, &year, name) == 5) {
+		if (strcmp(name, key) != 0) {
+			fprintf(out, "%d %d.%d.%d %s\n", polka, day, month, year, name);
+		}
+		else {
+			deleted++;
+		}
+	}
+	fclose(in);
+	fclose(out);
+	remove("in.txt");
+	rename("temp.txt", "in.txt");
+	printf("Deleted %d row(s).\n", deleted);
+}
+
+//  от Носорев Даниил (пункт 2)
 //Добавить строчку в массив
+void adding() {
+	int polka, day, month, year;
+	char name[50];
+	printf("Enter shelf number: ");
+	scanf("%d", &polka);
+	printf("Enter date (day month year separated by spaces): ");
+	scanf("%d %d %d", &day, &month, &year);
+	printf("Enter cargo name: ");
+	scanf("%49s", name);
+
+	FILE* f = fopen("in.txt", "a");
+	if (!f) {
+		printf("File opening error in.txt\n");
+		return;
+	}
+	fprintf(f, "%d %d.%d.%d %s\n", polka, day, month, year, name);
+	fclose(f);
+	printf("Row added.\n");
+}

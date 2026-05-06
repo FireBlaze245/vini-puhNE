@@ -18,6 +18,9 @@ void sort_input(struct result results[], int count);
 void sort_choice(struct result results[], int count);
 int menu();
 int fsafe(struct result arr[]);
-void print_file_pagik_trushniy(struct result results[], int count);
+void print_terminal_pagik_trushniy(struct result results[], int count);
+void deletik();
+void replacee();
+void adding();
 
 #endif

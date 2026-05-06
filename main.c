@@ -1,8 +1,6 @@
 ﻿/*Носорев Даниил Евстифеева Марина
 Носорев делает main.c с построением логики и реализации функций сохранить в массив из файла
-евстифеева делает реализацию функций в header.c
-набросан шаблоны и макет будующих функций
-реализация всего на 50% заняло 1.5 часа. Будем ДОДЕЛЫВАЬТЬ */
+евстифеева делает реализацию функций в header.c*/
 //В базе данных склада содержатся сведения о грузах и размещении на стеллажах.
 //Структура входного файла in.txt (Номер стеллажа Дата укладки Название груза)
 //1 25.10.2022 Printer_HP
@@ -26,14 +24,14 @@
 //Принтер_HP 1
 /* По своему проекту Винни уровня 3 или 4:
 Меню:
-0. Выход +
+0. Выход 
 1. Загрузить данные из входного файла в массив структур
 2. Добавить строчку в массив
 3. Удалить строчку по ключу
 4. Заменить строчку
-5. Сортировка вставкой +
-6. Сортировка выбором  +
-7. Сортировка обменом (пузырек) +
+5. Сортировка вставкой 
+6. Сортировка выбором  
+7. Сортировка обменом (пузырек) 
 8. Сохранить данные в файл
 9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы 
 */
@@ -42,6 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
+#include <windows.h>
 #include "header.h"
 
 
@@ -50,7 +49,9 @@
 int main(void) {
 	int number, counter=0, loaded=0;
 	struct result arr[100];
-	setlocale(LC_ALL, "");
+	SetConsoleOutputCP(CP_UTF8);
+	SetConsoleCP(CP_UTF8);
+	setlocale(LC_ALL, "RU");
 	number = menu();
 	while (number != 0) {
 		switch (number) {
@@ -58,20 +59,21 @@ int main(void) {
 			//1. Загрузить данные из входного файла в массив структур
 			counter = fsafe(arr);
 			loaded = 1;
+			printf("The data is uploaded. Records: %d\n", counter);
 			break;
 		case 2:
-			//2. Добавить строчку в массив не сделано
+			//2. Добавить строчку в массив 
 			if (loaded != 1) { printf("First, upload the data (point 1)\n"); break; }
-			else { break; }
+			else { adding(); counter = fsafe(arr); loaded = 1;  break; }
 
 		case 3:
-			//3. Удалить строчку по ключу не сделано
+			//3. Удалить строчку по ключу
 			if (loaded != 1) {printf("First, upload the data (point 1)\n"); break;}
-			else { break; }
+			else { deletik(); counter = fsafe(arr); loaded = 1; break; }
 		case 4:
 			//4. Заменить строчку не сделано
 			if (loaded != 1) {printf("First, upload the data (point 1)\n"); break;}
-			else { break; }
+			else { replacee(); counter = fsafe(arr); loaded = 1;  break; }
 		case 5:
 			//5. Сортировка вставкой
 			if (loaded != 1) { printf("First, upload the data (point 1)\n"); break;}
@@ -91,7 +93,7 @@ int main(void) {
 		case 9:
 			//9. Отпечатать файл или массив с разбивкой по страницам и шапкой с номером страницы, сделано как вывод в файл
 			if (loaded != 1) { printf("First, upload the data (point 1)\n"); break;}
-			else{print_file_pagik_trushniy(arr, counter);break;}
+			else{ print_terminal_pagik_trushniy(arr, counter);break;}
 		case 0:
 			//Выход
 			break;
